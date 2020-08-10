@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Remote Live</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      #panel{
+        background:#ccc;
+        width: 300px;
+        height: 380px;
+        border-radius: 20px;
+        margin: 30 auto 0 auto;
+        box-shadow: 0px 20px #999;
+      }
+
+      #panel > h1 {
+        color:#333;
+        padding: 20px;
+        margin: 10px;
+        text-align: center;
+      }
+
+      #panel > #buttons {
+        display: flex;
+      }
+
+      .keytop_normal {
+        color: #333;
+        font-size: 60px;
+        text-align: left;
+        padding-left: 30px;
+        line-height: 200px;
+        background: #eee;
+        width: 180px;
+        height: 200px;
+        margin: 10px auto;
+        border-radius: 15%;
+        box-shadow: 0px 35px #aaa;
+        cursor: pointer;
+        user-select: none;
+      }
+      
+      .keytop_pressed {
+        margin-top: 25px;
+        box-shadow: 0px 20px #aaa;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="panel">
+      <h1>RemoteTyping</h1>
+      <div id="buttons">
+        <div id="keytop" class="keytop_normal">A</div>
+        <!--
+          <div id="keytop">Enter</div>
+        -->
+      </div>
+    </div>
+
+    <script>
+    {
+      const socket = io.connect();
+      const key = document.getElementById('keytop');
+
+      // socketIOでイベントが来たらボタンが押された絵に変わる
+      socket.on('keyTyped_notify', function(data, fn) {
+        console.log('keyTyped');
+        if (!key.classList.contains("keytop_pressed")) {
+          console.log('add pressed');
+          key.classList.add("keytop_pressed");
+        }
+
+        setTimeout( () => {
+          if (key.classList.contains("keytop_pressed")) {
+            console.log('remove pressed');
+            key.classList.remove("keytop_pressed");
+          }
+        }, 70);
+      });
+    }
+    </script>
+  </body>
+</html>
